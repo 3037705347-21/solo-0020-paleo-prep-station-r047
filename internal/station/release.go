@@ -26,8 +26,8 @@ func (s *Service) ReleaseSpecimen(
 		if m.HasOpenPlan(specimenID) {
 			return contracts.Conflict("open_plan_blocks_release", "存在未结束方案，不能办理研究放行")
 		}
-		if len(m.ConsignmentsForSpecimen(specimenID)) > 1 {
-			return contracts.Conflict("consignment_conflict_blocks_release", "标本存在冲突的外协委托，不能办理研究放行")
+		if m.HasOpenConsignment(specimenID) {
+			return contracts.Conflict("consignment_open_blocks_release", "标本仍在外协单位，在途外协未闭环前不能办理研究放行")
 		}
 		if _, exists := m.ReleaseForSpecimen(specimenID); exists {
 			return contracts.Conflict("release_exists", "该标本已经存在放行记录")
