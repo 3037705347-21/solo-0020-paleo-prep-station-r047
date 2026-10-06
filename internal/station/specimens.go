@@ -66,6 +66,9 @@ func (s *Service) DispatchConsignment(
 			created = replay
 			return nil
 		}
+		if m.HasOpenConsignment(specimenID) {
+			return contracts.Conflict("open_consignment_exists", "该标本已有未闭环的外协委托，不能重复送出")
+		}
 		value, err := domain.NewConsignment(
 			s.nextID("consignment"),
 			specimen,
@@ -102,7 +105,7 @@ func (s *Service) ReturnConsignment(
 			return notFoundSpecimen(specimenID)
 		}
 		value, ok := m.GetConsignment(consignmentID)
-		if !ok {
+		if !ok || value.SpecimenID != specimenID {
 			return notFoundConsignment(consignmentID)
 		}
 		if err := value.Close(request.AcceptedBy, request.Conclusion, s.now()); err != nil {

@@ -225,6 +225,9 @@ func (c Consignment) IsOpen() bool {
 }
 
 func (c *Consignment) Close(acceptedBy string, conclusion string, now time.Time) error {
+	if c.Status == ConsignmentClosed {
+		return contracts.Conflict("consignment_already_closed", "该外协委托已完成回厂验收，不能重复闭环")
+	}
 	operator, err := requiredText("验收人", acceptedBy, 80)
 	if err != nil {
 		return err

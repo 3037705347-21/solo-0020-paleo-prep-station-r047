@@ -27,6 +27,8 @@ go run ./cmd/paleo-prep-station --addr 127.0.0.1:18133
 
 - `GET /specimens` 与 `POST /specimens`
 - `GET /specimens/{id}`
+- `GET /specimens/{id}/consignments` 与 `POST /specimens/{id}/consignments`
+- `POST /specimens/{id}/consignments/{consignmentID}/return`
 - `POST /specimens/{id}/plans`
 - `GET /plans/{id}`
 - `POST /plans/{id}/approval`
@@ -42,6 +44,7 @@ go run ./cmd/workflowcheck --workflow register-specimen
 go run ./cmd/workflowcheck --workflow approve-prep-plan
 go run ./cmd/workflowcheck --workflow log-preparation
 go run ./cmd/workflowcheck --workflow release-for-study
+go run ./cmd/workflowcheck --workflow consignment-custody
 ```
 
 这些检查会启动临时 HTTP 处理器并调用真实公共路由。
